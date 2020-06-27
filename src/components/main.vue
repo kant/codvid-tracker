@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import country from "../countryCodes.js";
 export default {
   data() {
     return {
@@ -109,7 +110,33 @@ export default {
       this.location = "Worldwide";
     },
     getLatestM() {
-      console.log(this.search);
+      country.forEach(element => {
+        if (element.Name == this.search) {
+          const code = element.Code;
+          console.log(code);
+          this.countryCode = code;
+        } else {
+          console.log("no match found");
+        }
+      });
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow"
+      };
+
+      fetch(
+        `https://coronavirus-tracker-api.herokuapp.com/v2/locations?country_code=${this.countryCode}`,
+        requestOptions
+      )
+        .then(response => response.json())
+        .then(result => {
+          this.confirmed = result.latest.confirmed;
+          this.deaths = result.latest.deaths;
+          this.location = result.locations[0].country;
+          console.log(result.locations[0].country);
+        })
+        .catch(error => console.log("error", error));
+
       this.search = "";
     },
     getLatestCL() {
@@ -126,7 +153,7 @@ export default {
         .then(result => {
           this.confirmed = result.latest.confirmed;
           this.deaths = result.latest.deaths;
-          this.location = result.locations[0].country;
+          this.location = this.currentLocation;
         })
         .catch(error => console.log("error", error));
     }
