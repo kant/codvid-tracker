@@ -44,4 +44,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 # THANKS TO :
 
-- [ExpDev](https://github.com/ExpDev07) for creating that amazing [API](https://github.com/ExpDev07/coronavirus-tracker-api)
+- [ExpDev](https://github.com/ExpDev07) for creating that amazing [API](https://github.com/ExpDev07/coronavirus-tracker-api) \*[UIGRADIENTS](https://uigradients.com/#Lawrencium) for using their **Color Gardient**
