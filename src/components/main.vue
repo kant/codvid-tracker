@@ -11,10 +11,18 @@
           type="text"
           id="search-input"
           v-model="search"
-          placeholder="SEARCH COUNTRY - EX : GERMANY .... "
+          placeholder="SEARCH ,EX : GERMANY OR DE"
+          v-show="!error"
         />
-        <button @click="getLatestM" class="search-btn">SEARCH</button>
+        <button v-show="!error" @click="getLatestM" class="search-btn">SEARCH</button>
+        <div v-show="error" class="errorMsg">
+          <p>Sorry !!!</p>
+          <p>There has been an Error</p>
+          <P>We do not have Data for the Choosen Country</P>
+          <button @click="removeError" class="error-btn">X</button>
+        </div>
       </div>
+
       <div class="defaults">
         <div class="search-box">
           <div v-show="!noLocation">
@@ -38,12 +46,14 @@
       <h3>Latest</h3>
       <div class="results">
         <div class="result">
-          <h5>CONFIRMED: {{location}}</h5>
+          <h5>CONFIRMED:</h5>
+          <p>{{location}}</p>
 
           <p>{{confirmed}}</p>
         </div>
         <div class="result">
-          <h5>DEATHS: {{location}}</h5>
+          <h5>DEATHS:</h5>
+          <p>{{location}}</p>
 
           <p>{{deaths}}</p>
         </div>
@@ -63,7 +73,9 @@ export default {
       noLocation: false,
       location: "",
       currentLocation: "",
-      countryCode: ""
+      countryCode: "",
+      error: false,
+      checked: false
     };
   },
 
@@ -96,7 +108,6 @@ export default {
         method: "GET",
         redirect: "follow"
       };
-
       fetch(
         "https://coronavirus-tracker-api.herokuapp.com/v2/latest",
         requestOptions
@@ -109,35 +120,43 @@ export default {
         .catch(error => console.log("error", error));
       this.location = "Worldwide";
     },
+    removeError() {
+      this.error = false;
+    },
+
     getLatestM() {
       country.forEach(element => {
         if (element.Name == this.search) {
           const code = element.Code;
           console.log(code);
           this.countryCode = code;
-        } else {
-          console.log("no match found");
+          this.checked = true;
+        } else if (element.Code == this.search) {
+          console.log(element.Code);
+          this.countryCode = element.Code;
+          this.checked = true;
         }
       });
-      const requestOptions = {
-        method: "GET",
-        redirect: "follow"
-      };
+      if (this.checked) {
+        const requestOptions = {
+          method: "GET",
+          redirect: "follow"
+        };
+        fetch(
+          `https://coronavirus-tracker-api.herokuapp.com/v2/locations?country_code=${this.countryCode}`,
+          requestOptions
+        )
+          .then(response => response.json())
+          .then(result => {
+            this.confirmed = result.latest.confirmed;
+            this.deaths = result.latest.deaths;
+            this.location = result.locations[0].country;
+            console.log(result.locations[0].country);
+          })
+          .catch(error => console.log("error", error));
 
-      fetch(
-        `https://coronavirus-tracker-api.herokuapp.com/v2/locations?country_code=${this.countryCode}`,
-        requestOptions
-      )
-        .then(response => response.json())
-        .then(result => {
-          this.confirmed = result.latest.confirmed;
-          this.deaths = result.latest.deaths;
-          this.location = result.locations[0].country;
-          console.log(result.locations[0].country);
-        })
-        .catch(error => console.log("error", error));
-
-      this.search = "";
+        this.search = "";
+      }
     },
     getLatestCL() {
       const requestOptions = {
@@ -170,13 +189,35 @@ export default {
   width: 90%;
   border-radius: 45px;
   text-align: center;
+  height: 80vh;
 }
 .info {
   border-bottom: 2px solid snow;
   padding: 20px;
   font-size: 20px;
 }
-
+.errorMsg {
+  border: 2px snow solid;
+  padding: 20px;
+  font-size: 20px;
+  background-color: rgb(170, 0, 0);
+}
+.error-btn {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 2px solid snow;
+  color: snow;
+  padding: 5px;
+  margin: 10px auto;
+  font-size: 18px;
+  cursor: pointer;
+}
+.error-btn:hover {
+  border-radius: 40px;
+  font-weight: bold;
+  transition: ease-in 1s;
+}
 .search-boxes {
   margin: 10px auto;
   width: fit-content;

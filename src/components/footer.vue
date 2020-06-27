@@ -19,8 +19,9 @@ export default {
 #footer {
   background: linear-gradient(to right, #1f1c18, #8e0e00);
   color: snow;
-  padding: 20px;
+  padding: 10px;
   text-align: center;
+  height: 5vh;
 }
 a {
   color: snow;
