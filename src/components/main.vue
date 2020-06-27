@@ -2,31 +2,50 @@
   <div id="main">
     <div class="info">
       <h1>Corona Tracker</h1>
-      <p>Please search for the country and hit search</p>
+      <p>Please Hit Latest to get Latest Data</p>
+      <p>Also if you like you can Search for latest Data in your Desired Country.</p>
     </div>
-    <div class="search-box">
-      <input
-        type="text"
-        id="search-input"
-        v-model="search"
-        placeholder="SEARCH COUNTRY - EX : GERMANY .... "
-      />
-      <button class="search-btn">SEARCH</button>
+    <div class="search-boxes">
+      <div class="manual">
+        <input
+          type="text"
+          id="search-input"
+          v-model="search"
+          placeholder="SEARCH COUNTRY - EX : GERMANY .... "
+        />
+        <button @click="getLatestM" class="search-btn">SEARCH</button>
+      </div>
+      <div class="defaults">
+        <div class="search-box">
+          <div v-show="!noLocation">
+            <h3>Current Location : {{currentLocation}}</h3>
+            <button @click="getLatestCL" class="search-btn">LATEST</button>
+          </div>
+          <div v-show="noLocation">
+            <p>Sorry were not able to get your Location !</p>
+            <p>Please try to refresh the Page and allow locations. So we can show you the Statics for your Current Location.</p>
+          </div>
+        </div>
+
+        <div class="search-box">
+          <h3>Worldwide Statics</h3>
+          <button @click="getLatestW" class="search-btn">LATEST</button>
+        </div>
+      </div>
     </div>
+
     <div class="result-box">
-      <h3>GERMANY</h3>
+      <h3>Latest</h3>
       <div class="results">
         <div class="result">
-          <h5>CONFIRMED:</h5>
-          <p>54</p>
+          <h5>CONFIRMED: {{location}}</h5>
+
+          <p>{{confirmed}}</p>
         </div>
         <div class="result">
-          <h5>RECOVERED:</h5>
-          <p>54</p>
-        </div>
-        <div class="result">
-          <h5>DEATHS:</h5>
-          <p>54</p>
+          <h5>DEATHS: {{location}}</h5>
+
+          <p>{{deaths}}</p>
         </div>
       </div>
     </div>
@@ -37,8 +56,80 @@
 export default {
   data() {
     return {
-      search: ""
+      search: "",
+      deaths: "-",
+      confirmed: "-",
+      noLocation: false,
+      location: "",
+      currentLocation: "",
+      countryCode: ""
     };
+  },
+
+  beforeMount() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const requestOptions = {
+          method: "GET",
+          redirect: "follow"
+        };
+
+        fetch(
+          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}`,
+          requestOptions
+        )
+          .then(response => response.json())
+          .then(result => {
+            this.currentLocation = result.city;
+            this.countryCode = result.countryCode;
+          })
+          .catch(error => console.log("error", error));
+      });
+    } else {
+      (this.noLocation = true), (this.location = "No location Provided");
+    }
+  },
+  methods: {
+    getLatestW() {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow"
+      };
+
+      fetch(
+        "https://coronavirus-tracker-api.herokuapp.com/v2/latest",
+        requestOptions
+      )
+        .then(response => response.json())
+        .then(result => {
+          this.confirmed = result.latest.confirmed;
+          this.deaths = result.latest.deaths;
+        })
+        .catch(error => console.log("error", error));
+      this.location = "Worldwide";
+    },
+    getLatestM() {
+      console.log(this.search);
+      this.search = "";
+    },
+    getLatestCL() {
+      const requestOptions = {
+        method: "GET",
+        redirect: "follow"
+      };
+
+      fetch(
+        `https://coronavirus-tracker-api.herokuapp.com/v2/locations?country_code=${this.countryCode}`,
+        requestOptions
+      )
+        .then(response => response.json())
+        .then(result => {
+          this.confirmed = result.latest.confirmed;
+          this.deaths = result.latest.deaths;
+          this.location = result.locations[0].country;
+        })
+        .catch(error => console.log("error", error));
+    }
   }
 };
 </script>
@@ -59,9 +150,26 @@ export default {
   font-size: 20px;
 }
 
-.search-box {
+.search-boxes {
   margin: 10px auto;
   width: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+.defaults {
+  display: flex;
+  justify-content: space-around;
+  width: fit-content;
+}
+.manual {
+  margin: 30px auto;
+}
+
+.search-box {
+  border: 2px solid snow;
+  padding: 20px;
+  text-align: center;
+  margin: 10px;
 }
 #search-input {
   font-size: 18px;
@@ -84,7 +192,7 @@ export default {
   border: 2px solid snow;
   color: snow;
   padding: 10px;
-  margin-left: 20px;
+  margin: 10px auto;
   font-size: 18px;
   cursor: pointer;
 }
