@@ -1,6 +1,7 @@
 # Codvid-19 Tracker
 
 This application is a basic **Corona Virus** tracker.
+The source code can be found at **[Test-Branch](https://github.com/Korak-997/codvid-tracker/tree/test)**
 
 #### What it does ?
 
@@ -45,3 +46,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 # THANKS TO :
 
 - [ExpDev](https://github.com/ExpDev07) for creating that amazing [API](https://github.com/ExpDev07/coronavirus-tracker-api)
+
+* [UIGRADIENTS](https://uigradients.com/#Lawrencium) for using their **Color Gardient**
+* [BIG DATA](https://www.bigdatacloud.com/) for their amazing [Geocoding API](https://www.bigdatacloud.com/geocoding-apis/free-reverse-geocode-to-city-api)
+
+* [Tobias Ahlin](https://twitter.com/tobiasahlin) for his nice [Loading Animation](https://tobiasahlin.com/spinkit/)
