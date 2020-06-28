@@ -21,7 +21,6 @@ export default {
   color: snow;
   padding: 10px;
   text-align: center;
-  height: 5vh;
 }
 a {
   color: snow;

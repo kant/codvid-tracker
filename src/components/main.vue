@@ -17,7 +17,7 @@
           id="search-input"
           v-model="search"
           @keyup="showSuggestion"
-          placeholder="SEARCH ,EX : GERMANY OR DE"
+          placeholder="Germany or DE"
           v-show="!error"
         />
         <button v-show="!error" @click="getLatestM" class="search-btn">SEARCH</button>
@@ -25,6 +25,7 @@
           <p>Sorry !!!</p>
           <p>There has been an Error</p>
           <P>We do not have Data for the Choosen Country</P>
+          <p>Or maybe there is an Error in our Servers.</p>
           <button @click="removeError" class="error-btn">X</button>
         </div>
       </div>
@@ -147,11 +148,15 @@ export default {
           this.deaths = result.latest.deaths;
           this.loading = false;
         })
-        .catch(error => console.log("error", error));
+        .catch(error => {
+          this.error = true;
+          console.log("error", error);
+        });
       this.location = "Worldwide";
     },
     removeError() {
       this.error = false;
+      this.loading = false;
     },
     showSuggestion() {
       this.suggestion = true;
@@ -194,10 +199,14 @@ export default {
             console.log(result.locations[0].country);
             this.loading = false;
           })
-          .catch(error => console.log("error", error));
+          .catch(error => {
+            this.error = true;
+            console.log("error", error);
+          });
 
         this.search = "";
       }
+      this.filtered = [];
     },
     getLatestCL() {
       const requestOptions = {
@@ -219,7 +228,10 @@ export default {
           this.location = this.currentLocation;
           this.loading = false;
         })
-        .catch(error => console.log("error", error));
+        .catch(error => {
+          this.error = true;
+          console.log("error", error);
+        });
     }
   }
 };
@@ -234,7 +246,7 @@ export default {
   width: 90%;
   border-radius: 45px;
   text-align: center;
-  height: 80vh;
+  height: fit-content;
   transition: ease 1s;
 }
 .info {
@@ -376,7 +388,7 @@ export default {
 #search-input {
   font-size: 18px;
   padding: 10px;
-  width: 400px;
+  width: 50%;
   background-color: transparent;
   border: none;
   border-bottom: 2px solid snow;
@@ -417,5 +429,26 @@ export default {
   display: flex;
   justify-content: space-around;
   transition: ease 1s;
+}
+@media (max-width: 490px) {
+  .defaults {
+    flex-direction: column;
+  }
+  .results {
+    flex-direction: column;
+  }
+  .result {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+  }
+  #search-input {
+    font-size: 16px;
+    padding: 5px;
+  }
+  .suggestion {
+    padding: 10px;
+    font-size: 16px;
+  }
 }
 </style>

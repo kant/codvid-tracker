@@ -20,7 +20,6 @@ export default {
   background: linear-gradient(to right, #1f1c18, #8e0e00);
   color: snow;
   padding: 10px;
-  height: 10vh;
 }
 .logo {
   width: 200px;
