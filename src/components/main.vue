@@ -7,10 +7,16 @@
     </div>
     <div class="search-boxes">
       <div class="manual">
+        <div v-show="suggestion" class="suggestion">
+          <ul>
+            <li v-for="s in filtered" v-bind:key="s.id">{{s[0]}}</li>
+          </ul>
+        </div>
         <input
           type="text"
           id="search-input"
           v-model="search"
+          @keyup="showSuggestion"
           placeholder="SEARCH ,EX : GERMANY OR DE"
           v-show="!error"
         />
@@ -80,6 +86,7 @@
 
 <script>
 import country from "../countryCodes.js";
+import countArr from "../countryArr";
 export default {
   data() {
     return {
@@ -90,9 +97,11 @@ export default {
       location: "",
       currentLocation: "",
       countryCode: "",
+      filtered: [],
       error: false,
       checked: false,
-      loading: false
+      loading: false,
+      suggestion: false
     };
   },
 
@@ -144,8 +153,15 @@ export default {
     removeError() {
       this.error = false;
     },
+    showSuggestion() {
+      this.suggestion = true;
+      if (this.search.length == 2) {
+        this.filtered.push(countArr.filter(s => s.match(this.search)));
+      }
+    },
 
     getLatestM() {
+      this.suggestion = false;
       country.forEach(element => {
         if (element.Name == this.search) {
           const code = element.Code;
@@ -219,17 +235,30 @@ export default {
   border-radius: 45px;
   text-align: center;
   height: 80vh;
+  transition: ease 1s;
 }
 .info {
   border-bottom: 2px solid snow;
   padding: 20px;
   font-size: 20px;
 }
+.suggestion {
+  border: 2px solid snow;
+  border-bottom: none;
+  padding: 10px;
+  font-size: 18px;
+  margin-bottom: 0px;
+  transition: ease 1s;
+}
+.suggestion li {
+  list-style: none;
+}
 .errorMsg {
   border: 2px snow solid;
   padding: 20px;
   font-size: 20px;
   background-color: rgb(170, 0, 0);
+  transition: ease 1s;
 }
 .sk-cube-grid {
   width: 40px;
@@ -335,7 +364,7 @@ export default {
   width: fit-content;
 }
 .manual {
-  margin: 30px auto;
+  margin: 20px auto;
 }
 
 .search-box {
@@ -365,7 +394,7 @@ export default {
   border: 2px solid snow;
   color: snow;
   padding: 10px;
-  margin: 10px auto;
+  margin: 0px auto;
   font-size: 18px;
   cursor: pointer;
 }
@@ -376,16 +405,17 @@ export default {
 }
 .result-box {
   border: 2px solid snow;
-  margin: 20px;
+  margin: 10px;
   padding: 30px;
   font-size: 22px;
   text-align: center;
 }
 
 .results {
-  margin: 20px auto;
+  margin: 10px auto;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  transition: ease 1s;
 }
 </style>
