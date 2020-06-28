@@ -2,7 +2,9 @@
   <div id="footer">
     <p>
       Created by
-      <a target="_blank" href="https://github.com/Korak-997">Korak Kurani (Dani)</a>
+      <a target="_blank" href="https://github.com/Korak-997"
+        >Korak Kurani (Dani)</a
+      >
     </p>
   </div>
 </template>
@@ -11,7 +13,7 @@
 export default {
   data() {
     return {};
-  }
+  },
 };
 </script>
 
@@ -28,7 +30,8 @@ a {
 }
 a:hover {
   text-decoration: none;
-  border: snow 2px solid;
-  transition: ease-out 1s;
+  border: 3px solid snow;
+  border-radius: 50%;
+  transition: ease 1s;
 }
 </style>
