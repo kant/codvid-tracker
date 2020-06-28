@@ -43,19 +43,35 @@
     </div>
 
     <div class="result-box">
-      <h3>Latest</h3>
-      <div class="results">
-        <div class="result">
-          <h5>CONFIRMED:</h5>
-          <p>{{location}}</p>
-
-          <p>{{confirmed}}</p>
+      <div v-show="loading">
+        <H3>Loading please wait ...</H3>
+        <div class="sk-cube-grid">
+          <div class="sk-cube sk-cube1"></div>
+          <div class="sk-cube sk-cube2"></div>
+          <div class="sk-cube sk-cube3"></div>
+          <div class="sk-cube sk-cube4"></div>
+          <div class="sk-cube sk-cube5"></div>
+          <div class="sk-cube sk-cube6"></div>
+          <div class="sk-cube sk-cube7"></div>
+          <div class="sk-cube sk-cube8"></div>
+          <div class="sk-cube sk-cube9"></div>
         </div>
-        <div class="result">
-          <h5>DEATHS:</h5>
-          <p>{{location}}</p>
+      </div>
+      <div v-show="!loading">
+        <h3>Latest</h3>
+        <div class="results">
+          <div class="result">
+            <h5>CONFIRMED:</h5>
+            <p>{{location}}</p>
 
-          <p>{{deaths}}</p>
+            <p>{{confirmed}}</p>
+          </div>
+          <div class="result">
+            <h5>DEATHS:</h5>
+            <p>{{location}}</p>
+
+            <p>{{deaths}}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -75,7 +91,8 @@ export default {
       currentLocation: "",
       countryCode: "",
       error: false,
-      checked: false
+      checked: false,
+      loading: false
     };
   },
 
@@ -112,10 +129,14 @@ export default {
         "https://coronavirus-tracker-api.herokuapp.com/v2/latest",
         requestOptions
       )
-        .then(response => response.json())
+        .then(response => {
+          this.loading = true;
+          return response.json();
+        })
         .then(result => {
           this.confirmed = result.latest.confirmed;
           this.deaths = result.latest.deaths;
+          this.loading = false;
         })
         .catch(error => console.log("error", error));
       this.location = "Worldwide";
@@ -146,12 +167,16 @@ export default {
           `https://coronavirus-tracker-api.herokuapp.com/v2/locations?country_code=${this.countryCode}`,
           requestOptions
         )
-          .then(response => response.json())
+          .then(response => {
+            this.loading = true;
+            return response.json();
+          })
           .then(result => {
             this.confirmed = result.latest.confirmed;
             this.deaths = result.latest.deaths;
             this.location = result.locations[0].country;
             console.log(result.locations[0].country);
+            this.loading = false;
           })
           .catch(error => console.log("error", error));
 
@@ -168,11 +193,15 @@ export default {
         `https://coronavirus-tracker-api.herokuapp.com/v2/locations?country_code=${this.countryCode}`,
         requestOptions
       )
-        .then(response => response.json())
+        .then(response => {
+          this.loading = true;
+          return response.json();
+        })
         .then(result => {
           this.confirmed = result.latest.confirmed;
           this.deaths = result.latest.deaths;
           this.location = this.currentLocation;
+          this.loading = false;
         })
         .catch(error => console.log("error", error));
     }
@@ -201,6 +230,82 @@ export default {
   padding: 20px;
   font-size: 20px;
   background-color: rgb(170, 0, 0);
+}
+.sk-cube-grid {
+  width: 40px;
+  height: 40px;
+  margin: 10px auto;
+}
+
+.sk-cube-grid .sk-cube {
+  width: 33%;
+  height: 33%;
+  background-color: snow;
+  float: left;
+  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+  animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+.sk-cube-grid .sk-cube1 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.sk-cube-grid .sk-cube2 {
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+.sk-cube-grid .sk-cube3 {
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+.sk-cube-grid .sk-cube4 {
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+.sk-cube-grid .sk-cube5 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.sk-cube-grid .sk-cube6 {
+  -webkit-animation-delay: 0.3s;
+  animation-delay: 0.3s;
+}
+.sk-cube-grid .sk-cube7 {
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}
+.sk-cube-grid .sk-cube8 {
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+.sk-cube-grid .sk-cube9 {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+  0%,
+  70%,
+  100% {
+    -webkit-transform: scale3D(1, 1, 1);
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
+}
+
+@keyframes sk-cubeGridScaleDelay {
+  0%,
+  70%,
+  100% {
+    -webkit-transform: scale3D(1, 1, 1);
+    transform: scale3D(1, 1, 1);
+  }
+  35% {
+    -webkit-transform: scale3D(0, 0, 1);
+    transform: scale3D(0, 0, 1);
+  }
 }
 .error-btn {
   width: 30px;
@@ -271,16 +376,16 @@ export default {
 }
 .result-box {
   border: 2px solid snow;
-  margin: 40px;
+  margin: 20px;
   padding: 30px;
-  font-size: 25px;
+  font-size: 22px;
   text-align: center;
 }
 
 .results {
   margin: 20px auto;
-  width: 50%;
+
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 </style>
