@@ -6,7 +6,7 @@ The source code can be found at **[Test-Branch](https://github.com/Korak-997/cod
 #### What it does ?
 
 Basically the user will enter or search for a specific location (mostly a country) for now !
-Then the app uses procided data from an **API** to get the information and show it back to the User.
+Then the app uses processed data from an **API** to get the information and show it back to the User.
 
 The basic or first version will only search for a country but later maybe there will other upgraded features.
 Which allow the user to search for specific cities or even specific data.
@@ -47,7 +47,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 - [ExpDev](https://github.com/ExpDev07) for creating that amazing [API](https://github.com/ExpDev07/coronavirus-tracker-api)
 
-* [UIGRADIENTS](https://uigradients.com/#Lawrencium) for using their **Color Gardient**
+* [UIGRADIENTS](https://uigradients.com/#Lawrencium) for using their **Color Gradient**
 * [BIG DATA](https://www.bigdatacloud.com/) for their amazing [Geocoding API](https://www.bigdatacloud.com/geocoding-apis/free-reverse-geocode-to-city-api)
 
 * [Tobias Ahlin](https://twitter.com/tobiasahlin) for his nice [Loading Animation](https://tobiasahlin.com/spinkit/)
